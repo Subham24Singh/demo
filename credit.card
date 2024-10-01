@@ -1,0 +1,64 @@
+# Import necessary libraries
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report, confusion_matrix
+from imblearn.over_sampling import SMOTE
+
+# Load the dataset
+# Assuming a CSV file format. Modify the path accordingly.
+df = pd.read_csv('creditcard.csv')
+
+# Check for missing values
+print(df.isnull().sum())
+
+# Drop any missing values if they exist
+df = df.dropna()
+
+# Feature matrix (X) and target vector (y)
+X = df.drop(columns=['Class'])  # Assuming 'Class' is the column with fraudulent (1) and non-fraudulent (0) transactions
+y = df['Class']
+
+# Normalize the features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Handle class imbalance using SMOTE (Synthetic Minority Over-sampling Technique)
+smote = SMOTE(random_state=42)
+X_resampled, y_resampled = smote.fit_resample(X_scaled, y)
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X_resampled, y_resampled, test_size=0.2, random_state=42)
+
+# Train a Random Forest Classifier
+rf_model = RandomForestClassifier(random_state=42)
+rf_model.fit(X_train, y_train)
+
+# Train a Logistic Regression model (as an alternative)
+lr_model = LogisticRegression(random_state=42)
+lr_model.fit(X_train, y_train)
+
+# Make predictions with Random Forest
+y_pred_rf = rf_model.predict(X_test)
+
+# Make predictions with Logistic Regression
+y_pred_lr = lr_model.predict(X_test)
+
+# Evaluate the models
+
+# Random Forest results
+print("Random Forest Classification Report:")
+print(classification_report(y_test, y_pred_rf))
+
+print("Random Forest Confusion Matrix:")
+print(confusion_matrix(y_test, y_pred_rf))
+
+# Logistic Regression results
+print("Logistic Regression Classification Report:")
+print(classification_report(y_test, y_pred_lr))
+
+print("Logistic Regression Confusion Matrix:")
+print(confusion_matrix(y_test, y_pred_lr))
