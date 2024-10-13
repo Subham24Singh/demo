@@ -1,0 +1,19 @@
+Create a bar chart or histogram to visualize the distribution of a categorical or continuous variable, such as the distribution of ages or genders in a population.
+
+import matplotlib.pyplot as plt
+
+# Sample population data over a range of years (in millions)
+years = [2010, 2012, 2014, 2016, 2018, 2020, 2022]
+population = [6.8, 7.0, 7.2, 7.4, 7.6, 7.8, 8.0]  # Population in billions
+
+# Creating a bar chart to visualize the population over years
+plt.figure(figsize=(10, 6))
+plt.bar(years, population, color='green')
+
+# Adding labels and title
+plt.xlabel('Year')
+plt.ylabel('Population (Billions)')
+plt.title('World Population Growth Over Time')
+
+# Displaying the plot
+plt.show()
